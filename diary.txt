@@ -1,0 +1,6 @@
+Date                Start                   Stop                Activity                    Comments
+02/07/2020          4.00                    6.00                Reading Spec
+
+04/07/2020          18.00                   22.00               Finishing lab               Good practice for assingment
+
+06/07/2020          22.00                   2.00                Coding                      init and add completed, commit and log half-done
