@@ -1,14 +1,23 @@
 #!/bin/dash
 
 cd .shrug
-
+count=0
 directory="index"
-if [ ! -d "$directory" ]; then
+while true; do
+	subD=$directory$count
+    
+    if [ ! -d "$subD" ]; then
 
-    mkdir ./$directory
-fi
+        mkdir ./$subD
+        break
 
-cd $directory
+    fi
+    count=$((count + 1))
+done
+
+
+
+cd $subD
 path=`pwd`
 cd ..
 cd ..
