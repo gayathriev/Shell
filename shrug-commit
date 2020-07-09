@@ -1,0 +1,55 @@
+#!/bin/dash
+
+cd .shrug
+count=0
+log="log.txt"
+num=0
+if [ ! -f "$log" ]; then
+
+    echo "0 $2" >$log
+
+else 
+    num=`wc -l <$log`
+    num=`echo $num | sed 's/ *$//g'`
+    echo "$num $2" >>$log 
+fi
+
+current_path=`pwd`
+new_path="$current_path/index$num"
+
+diff_c=0
+
+num_of_file=0
+
+cd $new_path
+
+for file in *;
+do
+    num_of_file=$((num_of_file + 1))
+    file_path="$new_path/$file"
+    prev_path="$current_path/$file"
+
+    if [ -f "$prev_path" ]; then 
+
+        if cmp -s $prev_path $file_path; then
+    
+            diff_c=$((diff_c + 1))
+        fi
+    fi
+    cp $file ..
+
+done
+
+if [ "$diff_c" -eq "$num_of_file" ] ; then
+    
+    echo "nothing to commit"
+    
+else 
+    echo "Committed as commit $num "
+fi 
+exit 1
+ 
+
+
+
+

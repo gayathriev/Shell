@@ -1,0 +1,56 @@
+#!/bin/dash
+
+index_num=`echo $1 | cut -d':' -f1`
+file_name=`echo $1 | cut -d':' -f2`
+
+cd .shrug
+
+if [ -z "$index_num" ]; then
+
+    c_index_num=`ls -l | grep -c ^d`
+    c_index_num=$((c_index_num -1))
+
+     
+
+    cd index$c_index_num
+    if [ -f "$file_name" ]; then
+        cat $file_name
+        exit 1
+    else  
+        echo "shrug-show: error: '$file_name' not found in index"
+        exit 1
+    fi
+       
+fi
+
+if [ ! -d "index$index_num" ]; then
+    
+    echo "shrug-show: error: unknown commit '$index_num'"
+    exit 1
+else 
+    cd index$index_num
+    if [ -f "$file_name" ]; then
+        cat $file_name
+        exit 1
+    fi
+fi 
+
+cd ..
+
+if [ -f "$file_name" ]; then
+    cat $file_name
+        exit 1
+else 
+    echo "shrug-show: error: '$file_name' not found in commit $index_num"
+fi
+
+exit 1
+
+
+
+
+
+
+
+
+

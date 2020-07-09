@@ -1,0 +1,12 @@
+#!/bin/dash
+
+cd .shrug
+file="log.txt"
+
+if [ ! -f $file ]; then
+
+    echo "log not found"
+
+fi
+
+tac $file

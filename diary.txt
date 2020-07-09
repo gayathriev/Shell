@@ -5,6 +5,12 @@ Date                Start                   Stop                Activity        
 
 06/07/2020          22.00                   2.00                Coding                      init and add completed, commit and log half-done
 
-07/07/2020          21.00                   2.35                Codingg                     completed subset-0 ---> no tests
+07/07/2020          21.00                   2.35                Codingg                     completed subset-0 ---> notests
+
+
+08/07/2020          21.00                   3.15                Coding                      Subset 0 --Done
+
+09/07/2020          16.30                   16.50               Debugging                   Fixed subset 0_6 bug
+
 
 give cs2041 ass1_shrug shrug-* diary.txt test??.sh [any-other-files]

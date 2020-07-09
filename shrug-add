@@ -1,0 +1,46 @@
+#!/bin/dash
+
+directory=".shrug"
+
+if [ ! -d "$directory" ]; then
+
+    echo "shrug-add: error: no .shrug directory containing shrug repository exists"
+    exit 1
+fi
+
+for file in "$@"; 
+do
+	if [ ! -f "$file" ]; then
+        echo "shrug-add: error: can not open '$file'"
+        exit 1
+    fi
+done 
+
+
+count=0
+directory="index"
+current_path=`pwd`
+new_path="$current_path/.shrug"
+
+while true; do
+	subD=$directory$count
+    index_path="$new_path/$subD"
+    if [ ! -d $index_path ]; then
+
+        mkdir $index_path
+        break
+
+    fi
+    count=$((count + 1))
+done
+
+for file in "$@"; 
+do			
+	case $input in
+        *[![:alnum:]_.-]*)
+            ;;
+        *)
+        cp $file $index_path        
+    esac
+
+done
