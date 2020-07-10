@@ -5,14 +5,9 @@ file_name=`echo $1 | cut -d':' -f2`
 
 cd .shrug
 
+# If no number in argument -> show index file
 if [ -z "$index_num" ]; then
-
-    c_index_num=`ls -l | grep -c ^d`
-    c_index_num=$((c_index_num -1))
-
-     
-
-    cd index$c_index_num
+    cd index
     if [ -f "$file_name" ]; then
         cat $file_name
         exit 1
@@ -23,11 +18,13 @@ if [ -z "$index_num" ]; then
        
 fi
 
+# if commit number given, check if commit exists
 if [ ! -d "index$index_num" ]; then
     
     echo "shrug-show: error: unknown commit '$index_num'"
     exit 1
 else 
+    # Commit exists, show file
     cd index$index_num
     if [ -f "$file_name" ]; then
         cat $file_name
@@ -35,8 +32,8 @@ else
     fi
 fi 
 
+# Commit exists, but file not in commmit so check Index
 cd ..
-
 if [ -f "$file_name" ]; then
     cat $file_name
         exit 1

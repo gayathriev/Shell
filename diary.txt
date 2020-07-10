@@ -12,5 +12,9 @@ Date                Start                   Stop                Activity        
 
 09/07/2020          16.30                   16.50               Debugging                   Fixed subset 0_6 bug
 
+10/07/2020          1:00                    3:00                Coding                      Commit-a, not passing tests -> need to edit subset 0
+
+10/07/2020          14.30                   16.00               Debugging                   Commit -a, passing tests now
+
 
 give cs2041 ass1_shrug shrug-* diary.txt test??.sh [any-other-files]

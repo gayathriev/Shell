@@ -1,49 +1,110 @@
 #!/bin/dash
 
+# directory path
+dir_path=`pwd`
+
 cd .shrug
-count=0
 log="log.txt"
+
+# Commit number
 num=0
-if [ ! -f "$log" ]; then
 
-    echo "0 $2" >$log
+num=`ls -l | grep "^d" | wc -l`
+num=`echo $num | sed 's/ *$//g'`
 
-else 
+if [ "$#" -eq 3 ]; then
+    message=$3
+    indnum=$((num -1))
     num=`wc -l <$log`
     num=`echo $num | sed 's/ *$//g'`
-    echo "$num $2" >>$log 
+    echo "$num $message" >>$log
+
+else 
+    message=$2
+    num=$((num -2))
+    echo "$num $message" >>$log 
 fi
 
-current_path=`pwd`
-new_path="$current_path/index$num"
+# if [ ! -f "$log" ]; then
 
+#     echo "0 $message" >$log
+
+# else 
+    # Finding commit number
+    # num=`wc -l <$log`
+    # num=`echo $num | sed 's/ *$//g'`
+    # echo "$num $message" >>$log 
+    # num=`ls -l | grep "^d" | wc -l`
+    # num=`echo $num | sed 's/ *$//g'`
+    # num=$((num -2))
+    # echo "$num $message" >>$log 
+    
+# fi
+
+repo_path=`pwd`
+index_path="$repo_path/index"
+
+# Add current directory files into index before commit
+if [ "$#" -eq 3 ]; then 
+
+    cd $dir_path
+    for file in *; do 
+        if [ -f "$index_path/$file" ]; then
+
+            cp $file "$index_path/$file"
+        fi
+    done
+    cd .shrug
+    # Make new commit folder
+    mkdir "$index_path$indnum"
+
+    cd $index_path
+
+    for file in *; do 
+        
+        cp $file "$index_path$num/$file"
+
+    done
+fi
+
+# same file counter
 diff_c=0
 
+# number of files commiting counter
 num_of_file=0
 
-cd $new_path
-
+cd $index_path
 for file in *;
 do
-    num_of_file=$((num_of_file + 1))
-    file_path="$new_path/$file"
-    prev_path="$current_path/$file"
+    # Checking if committing files have no change
+    if [ "$#" -eq 2 ]; then
+        
+        num_of_file=$((num_of_file + 1))
+        file_path="$index_path/$file"
+        prev_path="$repo_path/$file"
 
-    if [ -f "$prev_path" ]; then 
+        if [ -f "$prev_path" ]; then 
 
-        if cmp -s $prev_path $file_path; then
+            if cmp -s $prev_path $file_path; then
     
-            diff_c=$((diff_c + 1))
+                diff_c=$((diff_c + 1))
+
+            fi
         fi
     fi
     cp $file ..
-
 done
+
+
+
 
 if [ "$diff_c" -eq "$num_of_file" ] ; then
     
-    echo "nothing to commit"
-    
+    if [ "$num_of_file" -ne 0 ]; then
+        echo "nothing to commit"
+    else 
+        echo "Committed as commit $num "
+    fi    
 else 
     echo "Committed as commit $num "
 fi 

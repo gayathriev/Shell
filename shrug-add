@@ -17,22 +17,40 @@ do
 done 
 
 
-count=0
 directory="index"
 current_path=`pwd`
 new_path="$current_path/.shrug"
 
+# Index folder path
+index_dir="$new_path/$directory"
+
+# Checking if Index exitst
+if [ ! -d "$index_dir" ]; then
+    mkdir $index_dir
+fi
+
+# Commit count
+commit=0
 while true; do
-	subD=$directory$count
+    # Commit index folder
+	subD=$directory$commit
+
+    # Commit index path
     index_path="$new_path/$subD"
+
+    # Checking if commit index folder exists
     if [ ! -d $index_path ]; then
 
+        # Folder for new commit
         mkdir $index_path
         break
-
     fi
-    count=$((count + 1))
+    commit=$((commit + 1))
 done
+
+# emptying index folder
+# rm "$index_dir/*"
+
 
 for file in "$@"; 
 do			
@@ -40,7 +58,10 @@ do
         *[![:alnum:]_.-]*)
             ;;
         *)
-        cp $file $index_path        
+        # Copy files into commit folder
+        cp $file $index_path
+        # Copy files into Index folder
+        cp $file $index_dir        
     esac
 
 done
