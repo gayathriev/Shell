@@ -16,5 +16,11 @@ Date                Start                   Stop                Activity        
 
 10/07/2020          14.30                   16.00               Debugging                   Commit -a, passing tests now
 
+11/07/2020          20.00                   2.42                Coding + Debugging          One test in subset 0 not passing, rm pasing 2
+
+12/07/2020          23.00                   00.30               Debugging                   0 pasing, remove passing all tests except 14
+
+
+
 
 give cs2041 ass1_shrug shrug-* diary.txt test??.sh [any-other-files]

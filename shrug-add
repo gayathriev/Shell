@@ -1,6 +1,7 @@
 #!/bin/dash
 
 directory=".shrug"
+current_path=`pwd`
 
 if [ ! -d "$directory" ]; then
 
@@ -11,22 +12,27 @@ fi
 for file in "$@"; 
 do
 	if [ ! -f "$file" ]; then
-        echo "shrug-add: error: can not open '$file'"
-        exit 1
+    
+        if [ ! -f "$current_path/$directory" ]; then
+            echo "shrug-add: error: can not open '$file'"
+            exit 1
+        fi
     fi
 done 
 
 
 directory="index"
-current_path=`pwd`
+
 new_path="$current_path/.shrug"
 
 # Index folder path
 index_dir="$new_path/$directory"
+del_flag=1
 
 # Checking if Index exitst
 if [ ! -d "$index_dir" ]; then
     mkdir $index_dir
+    del_flag=0
 fi
 
 # Commit count
@@ -48,10 +54,16 @@ while true; do
     commit=$((commit + 1))
 done
 
-# emptying index folder
-# rm "$index_dir/*"
 
+# cd $index_dir
+# if [ "$del_flag" -eq 1 ]; then
 
+#     for file in *; do
+#         rm $file
+#     done
+# fi
+
+cd $current_path
 for file in "$@"; 
 do			
 	case $input in

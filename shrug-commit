@@ -25,22 +25,6 @@ else
     echo "$num $message" >>$log 
 fi
 
-# if [ ! -f "$log" ]; then
-
-#     echo "0 $message" >$log
-
-# else 
-    # Finding commit number
-    # num=`wc -l <$log`
-    # num=`echo $num | sed 's/ *$//g'`
-    # echo "$num $message" >>$log 
-    # num=`ls -l | grep "^d" | wc -l`
-    # num=`echo $num | sed 's/ *$//g'`
-    # num=$((num -2))
-    # echo "$num $message" >>$log 
-    
-# fi
-
 repo_path=`pwd`
 index_path="$repo_path/index"
 

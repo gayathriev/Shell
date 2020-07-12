@@ -1,0 +1,184 @@
+#!/bin/dash
+
+# cached flag
+cach_flag=0
+
+# force flag
+force_flag=0
+
+directory="index"
+current_path=`pwd`
+new_path="$current_path/.shrug"
+
+
+commit=0
+while true; do
+    # Commit index folder
+	subD=$directory$commit
+
+    # Commit index path
+    index_path="$new_path/$subD"
+
+    # Checking if commit index folder exists
+    if [ ! -d $index_path ]; then
+
+        # Folder for new commit
+        break
+    fi
+    commit=$((commit + 1))
+done
+
+commit=$((commit -2))
+
+
+
+if [ "$1" = "--force" ]; then
+    force_flag=1
+
+fi 
+
+if [ "$1" = "--cached" ]; then
+    cach_flag=1
+   
+fi
+
+directory_path=`pwd`
+repo_path="$directory_path/.shrug"
+index_path="$repo_path/index"
+
+# just rm case
+for file in "$@"; do
+
+    ir=0
+    rc=0
+    ic=0
+    if [ "$1" = "--force" ]; then
+        break
+    fi
+
+    if [ "$1" = "--cached" ]; then
+        break
+    fi 
+
+    if [ ! -f "$repo_path/$file"  ] && [ ! -f "$index_path/$file" ]; then
+
+        echo "shrug-rm: error: '$file' is not in the shrug repository"
+        exit 1
+    fi
+
+    if [ -f "$index_path/$file" ]; then
+
+        if cmp -s $index_path/$file $repo_path/$file; then
+            ir=1
+        fi
+        if cmp -s $index_path/$file $directory_path/$file; then
+            ic=1
+            
+        fi 
+    fi
+
+    if cmp -s $repo_path/$file $directory_path/$file; then
+        rc=1
+    fi 
+
+    if [ "$rc" -eq 0 ] && [ "$ir" -eq 0 ] && [ "$ic" -eq 0 ]; then
+
+        echo "shrug-rm: error: '$file' in index is different to both working file and repository"
+        exit 1
+    fi
+
+    if [ "$rc" -eq 0 ] && [ "$ir" -eq 1 ] && [ "$ic" -eq 0 ]; then
+
+        echo "shrug-rm: error: '$file' in repository is different to working file"
+        exit 1
+    fi
+
+    if [ "$ir" -eq 0 ] && [ "$rc" -eq 1 ] && [ "$ic" -eq 1 ]; then
+        echo "shrug-rm: error: '$file' has changes staged in the index"
+        exit 1
+    fi
+
+    if [ "$ir" -eq 0 ] && [ "$rc" -eq 0 ] && [ "$ic" -eq 1 ]; then
+        echo "shrug-rm: error: '$file' has changes staged in the index"
+        exit 1
+    fi
+
+    rm $file
+    rm "$index_path/$file"
+
+done
+
+if [ "$force_flag" -eq 1 ]; then
+    # call index remove function
+    for file in "$@"; do
+
+        if [ $file = "--force" ]; then 
+            continue
+        fi 
+
+        if [ $file = "--cached" ]; then
+            continue
+        fi
+
+        if [ ! -f "$index_path/$file"  ]; then
+
+            echo "shrug-rm: error: '$file' is not in the shrug repository"
+            exit 1
+        fi
+
+        if [ -f "$file" ]; then
+            rm $file
+            rm "$index_path/$file" 
+        else 
+            echo "shrug-rm: error: '$file' is not in the shrug repository"
+            exit 1
+        fi 
+    done
+fi
+
+if [ "$cach_flag" -eq 1 ]; then
+
+    ir=0
+    rc=0
+    ic=0
+
+    for file in "$@"; do
+
+        if [ $file = "--force" ]; then 
+            continue
+        fi 
+
+        if [ $file = "--cached" ]; then
+            continue
+        fi
+
+        if [ ! -f "$index_path/$file"  ]; then
+
+            echo "shrug-rm: error: '$file' is not in the shrug repository"
+            exit 1
+        fi 
+
+        if cmp -s $index_path/$file $directory_path/$file; then
+
+            # echo "shrug-rm: error: '$file' in index is different to both working file and repository"
+            # exit 1
+            rc=1
+        fi
+
+        if cmp -s $index_path/$file $repo_path/$file; then
+            # echo "shrug-rm: error: '$file' in index is different to both working file and repository"
+            ir=1
+            # exit 1
+        fi
+
+        if [ "$rc" -eq 0 ] && [ "$ir" -eq 0 ] && [ "$ic" -eq 0 ]; then
+
+            echo "shrug-rm: error: '$file' in index is different to both working file and repository"
+            exit 1
+        fi 
+
+        rm $index_path/$file
+        
+    done
+fi
+

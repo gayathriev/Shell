@@ -29,21 +29,27 @@ else
     if [ -f "$file_name" ]; then
         cat $file_name
         exit 1
+
     fi
+    cd ..
 fi 
 
-# Commit exists, but file not in commmit so check Index
-cd ..
+# cd ..
+# if [ -f "$file_name" ]; then
+#     cat $file_name
+#     exit 1
+# fi
+
+# #Commit exists, but file not in commmit so check Index
+cd index
 if [ -f "$file_name" ]; then
     cat $file_name
         exit 1
 else 
+    not_index=1
     echo "shrug-show: error: '$file_name' not found in commit $index_num"
+    exit 1
 fi
-
-exit 1
-
-
 
 
 
