@@ -3,6 +3,7 @@
 directory=".shrug"
 current_path=`pwd`
 
+
 if [ ! -d "$directory" ]; then
 
     echo "shrug-add: error: no .shrug directory containing shrug repository exists"
@@ -12,10 +13,11 @@ fi
 for file in "$@"; 
 do
 	if [ ! -f "$file" ]; then
-    
-        if [ ! -f "$current_path/$directory" ]; then
+
+        if [ ! -f "$current_path/$directory/$file" ]; then
             echo "shrug-add: error: can not open '$file'"
             exit 1
+            
         fi
     fi
 done 
@@ -34,6 +36,8 @@ if [ ! -d "$index_dir" ]; then
     mkdir $index_dir
     del_flag=0
 fi
+
+
 
 # Commit count
 commit=0
@@ -55,18 +59,16 @@ while true; do
 done
 
 
-# cd $index_dir
-# if [ "$del_flag" -eq 1 ]; then
-
-#     for file in *; do
-#         rm $file
-#     done
-# fi
 
 cd $current_path
 for file in "$@"; 
-do			
-	case $input in
+do	
+    if [ ! -f "$current_path/$file" ]; then
+        
+        rm "$index_dir/$file"
+        continue
+    fi
+	case $file in
         *[![:alnum:]_.-]*)
             ;;
         *)

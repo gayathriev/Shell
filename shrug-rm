@@ -34,12 +34,13 @@ commit=$((commit -2))
 
 if [ "$1" = "--force" ]; then
     force_flag=1
-
-fi 
-
-if [ "$1" = "--cached" ]; then
-    cach_flag=1
-   
+    # if [ "$2" = "--cached"] then
+    #     cach_flag=1
+    # fi
+else 
+    if [ "$1" = "--cached" ]; then
+        cach_flag=1
+    fi
 fi
 
 directory_path=`pwd`
@@ -55,7 +56,6 @@ for file in "$@"; do
     if [ "$1" = "--force" ]; then
         break
     fi
-
     if [ "$1" = "--cached" ]; then
         break
     fi 
@@ -117,6 +117,7 @@ if [ "$force_flag" -eq 1 ]; then
         fi 
 
         if [ $file = "--cached" ]; then
+            cach_flag=1
             continue
         fi
 
@@ -127,13 +128,16 @@ if [ "$force_flag" -eq 1 ]; then
         fi
 
         if [ -f "$file" ]; then
-            rm $file
             rm "$index_path/$file" 
+            if [ "$cach_flag" -eq 0 ]; then
+                rm $file
+            fi
         else 
             echo "shrug-rm: error: '$file' is not in the shrug repository"
             exit 1
         fi 
     done
+    exit 1
 fi
 
 if [ "$cach_flag" -eq 1 ]; then
@@ -180,5 +184,6 @@ if [ "$cach_flag" -eq 1 ]; then
         rm $index_path/$file
         
     done
+    exit
 fi
 

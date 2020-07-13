@@ -12,18 +12,24 @@ num=0
 num=`ls -l | grep "^d" | wc -l`
 num=`echo $num | sed 's/ *$//g'`
 
+
 if [ "$#" -eq 3 ]; then
     message=$3
     indnum=$((num -1))
-    num=`wc -l <$log`
-    num=`echo $num | sed 's/ *$//g'`
-    echo "$num $message" >>$log
-
 else 
     message=$2
-    num=$((num -2))
-    echo "$num $message" >>$log 
+ 
 fi
+
+if [ -f "$log" ]; then
+    num=`wc -l <$log`
+    num=`echo $num | sed 's/ *$//g'`
+else 
+
+    num=0
+fi
+echo "$num $message" >>$log 
+
 
 repo_path=`pwd`
 index_path="$repo_path/index"
@@ -32,7 +38,8 @@ index_path="$repo_path/index"
 if [ "$#" -eq 3 ]; then 
 
     cd $dir_path
-    for file in *; do 
+    for file in *; do
+
         if [ -f "$index_path/$file" ]; then
 
             cp $file "$index_path/$file"
@@ -57,9 +64,16 @@ diff_c=0
 # number of files commiting counter
 num_of_file=0
 
+
 cd $index_path
+# curr_index_file_num=`ls | wc -l`
+# curr_index_file_num=`echo $curr_index_file_num | sed 's/ *$//g'`
+
 for file in *;
 do
+    if [ "$file" = "*" ]; then
+        continue
+    fi
     # Checking if committing files have no change
     if [ "$#" -eq 2 ]; then
         
@@ -79,19 +93,27 @@ do
     cp $file ..
 done
 
+# index_file_num=`ls | wc -l`
+# index_file_num=`echo $index_file_num | sed 's/ *$//g'`
 
+# if [ "$index_file_num" -ne "$curr_index_file_num" ]; then
+#     echo "Committed as commit $num "
+#     exit 1
+# fi
 
 
 if [ "$diff_c" -eq "$num_of_file" ] ; then
     
     if [ "$num_of_file" -ne 0 ]; then
         echo "nothing to commit"
+        exit 1
     else 
         echo "Committed as commit $num "
     fi    
 else 
     echo "Committed as commit $num "
-fi 
+fi
+
 exit 1
  
 

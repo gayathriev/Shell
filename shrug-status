@@ -1,0 +1,118 @@
+#!/bin/dash
+
+directory_path=`pwd`
+repo_path="$directory_path/.shrug"
+index_path="$repo_path/index"
+status="$repo_path/status.txt"
+
+for file in *;
+do 
+
+    if [ "$file" = "*" ]; then
+        break
+    fi
+    ir=0
+    rc=0
+    ic=0
+
+    if [ ! -f "$index_path/$file" ]; then
+        echo "$file - untracked" >>$status
+        continue
+    fi
+
+    if [ ! -f "$repo_path/$file"  ]; then
+
+        if [ ! -f "$index_path/$file" ]; then
+            echo "$file - untracked" >>$status
+        else
+            if cmp -s $index_path/$file $directory_path/$file; then
+                echo "$file - added to index" >>$status
+                
+            else
+                echo "$file - added to index, file changed" >>$status
+            fi
+        fi
+        continue
+    fi
+
+    if cmp -s $repo_path/$file $directory_path/$file; then
+        rc=1
+    fi
+
+    if cmp -s $index_path/$file $directory_path/$file; then
+        ic=1            
+    fi 
+
+    if cmp -s $index_path/$file $repo_path/$file; then
+        ir=1
+    fi
+
+    if [ "$rc" -eq 0 ] && [ "$ir" -eq 0 ] && [ "$ic" -eq 0 ]; then
+
+        echo "$file - file changed, different changes staged for commit" >>$status
+        continue
+    fi
+
+    if [ "$rc" -eq 0 ] && [ "$ic" -eq 1 ] && [ "$ir" -eq 0 ]; then
+
+        echo "$file - file changed, changes staged for commit" >>$status
+        continue
+    fi
+
+    if [ "$rc" -eq 0 ] && [ "$ic" -eq 0 ] && [ "$ir" -eq 1 ]; then
+        echo "$file - file changed, changes not staged for commit" >>$status
+        continue
+    fi
+
+    if [ "$rc" -eq 1 ] && [ "$ic" -eq 1 ] && [ "$ir" -eq 1 ]; then
+        echo "$file - same as repo" >>$status
+        continue
+    fi
+
+done
+
+
+cd .shrug
+for file in *; 
+do 
+    if [ "$file" = "*" ]; then
+        break
+    fi
+
+    if [ "$file" = "log.txt" ] || [ "$file" = "status.txt" ]; then
+        continue
+    fi
+
+    if [ -d "$file" ]; then
+        continue
+    fi
+
+    if [ -f "$directory_path/$file" ];
+    then
+        # code if found
+        continue
+    else
+        # code if not found
+        if [ ! -f "$index_path/$file" ]; then
+            echo "$file - deleted" >>$status
+        else 
+            echo "$file - file deleted" >>$status
+        fi
+    fi
+done
+
+cd index
+for file in *;
+do 
+    if [ -f "$directory_path/$file" ] || [ -f "$repo_path/$file" ]; then
+        continue
+    fi
+    if [ "$file" = "*" ]; then
+        break
+    fi
+    echo "$file - added to index, file deleted" >>$status
+done
+
+cat $status | sort
+
+rm $status

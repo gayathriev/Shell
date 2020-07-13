@@ -20,7 +20,9 @@ Date                Start                   Stop                Activity        
 
 12/07/2020          23.00                   00.30               Debugging                   0 pasing, remove passing all tests except 14
 
+13/07/2020          1.00                    3.30                Coding                      0 pasing, 7/10 subset 1 passing, coded status
 
+13/07/2020          18.00                   22.00               Debugging                   0 passing, 8/10 subset 1 passing, tests for subset 0 done
 
 
 give cs2041 ass1_shrug shrug-* diary.txt test??.sh [any-other-files]
