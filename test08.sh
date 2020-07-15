@@ -10,7 +10,7 @@ echo "wow">e
 ./shrug-commit -a -m "e should change"
 
 echo "======= new E in index========"
-./shurg-show :e
+./shurg-show 0:e
 ./shrug-add g
 # g should be in index
 ./shrug-status

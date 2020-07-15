@@ -23,6 +23,7 @@ echo "This is for B">>b
 ./shrug-show :b
 
 echo "======= Expected Output====="
+echo "Committed as commit 4"
 echo "New line in b"
 echo "This is for B"
 

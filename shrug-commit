@@ -33,8 +33,6 @@ fi
 # Update Log
 echo "$num $message" >>$log 
 
-
-
 repo_path=`pwd`
 index_path="$repo_path/index"
 

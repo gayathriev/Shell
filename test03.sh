@@ -7,6 +7,7 @@
 ./shrug-add a c
 ./shrug-commit -m "A and C have changed"
 
+echo "================================"
 # check commit log, should be 
 
 ./shrug-log

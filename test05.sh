@@ -11,7 +11,8 @@ echo "--------------------------------"
 
 ./shrug-log
 
-"------------Expected Output----------"
+echo "------------Expected Output----------"
 
+echo "should'nt commit"
 echo "A and C have changed"
 echo "0 Files should be empty"
