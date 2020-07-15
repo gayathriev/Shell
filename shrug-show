@@ -1,5 +1,6 @@
 #!/bin/dash
 
+# Extract commit number and file
 index_num=`echo $1 | cut -d':' -f1`
 file_name=`echo $1 | cut -d':' -f2`
 
@@ -34,19 +35,12 @@ else
     cd ..
 fi 
 
-# cd ..
-# if [ -f "$file_name" ]; then
-#     cat $file_name
-#     exit 1
-# fi
-
-# #Commit exists, but file not in commmit so check Index
+#Commit exists, but file not in commmit so check Index
 cd index
 if [ -f "$file_name" ]; then
     cat $file_name
         exit 1
 else 
-    not_index=1
     echo "shrug-show: error: '$file_name' not found in commit $index_num"
     exit 1
 fi

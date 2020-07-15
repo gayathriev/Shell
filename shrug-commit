@@ -9,10 +9,11 @@ log="log.txt"
 # Commit number
 num=0
 
+# Find commit number
 num=`ls -l | grep "^d" | wc -l`
 num=`echo $num | sed 's/ *$//g'`
 
-
+# Check if commit -a is run
 if [ "$#" -eq 3 ]; then
     message=$3
     indnum=$((num -1))
@@ -21,25 +22,28 @@ else
  
 fi
 
+# Update Commit number
 if [ -f "$log" ]; then
     num=`wc -l <$log`
     num=`echo $num | sed 's/ *$//g'`
 else 
-
+    # First Commit
     num=0
 fi
+# Update Log
 echo "$num $message" >>$log 
+
 
 
 repo_path=`pwd`
 index_path="$repo_path/index"
 
-# Add current directory files into index before commit
+# Add current directory files into index before commit(-a)
 if [ "$#" -eq 3 ]; then 
 
     cd $dir_path
     for file in *; do
-
+        # Update if file is in index
         if [ -f "$index_path/$file" ]; then
 
             cp $file "$index_path/$file"
@@ -48,11 +52,9 @@ if [ "$#" -eq 3 ]; then
     cd .shrug
     # Make new commit folder
     mkdir "$index_path$indnum"
-
     cd $index_path
-
     for file in *; do 
-        
+        # Populating New Commit number
         cp $file "$index_path$num/$file"
 
     done
@@ -66,15 +68,13 @@ num_of_file=0
 
 
 cd $index_path
-# curr_index_file_num=`ls | wc -l`
-# curr_index_file_num=`echo $curr_index_file_num | sed 's/ *$//g'`
-
+# for files in index
 for file in *;
 do
     if [ "$file" = "*" ]; then
         continue
     fi
-    # Checking if committing files have no change
+    # Checking if committing files is normal run
     if [ "$#" -eq 2 ]; then
         
         num_of_file=$((num_of_file + 1))
@@ -82,9 +82,9 @@ do
         prev_path="$repo_path/$file"
 
         if [ -f "$prev_path" ]; then 
-
+            # Check if file is the same
             if cmp -s $prev_path $file_path; then
-    
+                # Increment same counter
                 diff_c=$((diff_c + 1))
 
             fi
@@ -92,14 +92,6 @@ do
     fi
     cp $file ..
 done
-
-# index_file_num=`ls | wc -l`
-# index_file_num=`echo $index_file_num | sed 's/ *$//g'`
-
-# if [ "$index_file_num" -ne "$curr_index_file_num" ]; then
-#     echo "Committed as commit $num "
-#     exit 1
-# fi
 
 
 if [ "$diff_c" -eq "$num_of_file" ] ; then
@@ -113,7 +105,6 @@ if [ "$diff_c" -eq "$num_of_file" ] ; then
 else 
     echo "Committed as commit $num "
 fi
-
 exit 1
  
 

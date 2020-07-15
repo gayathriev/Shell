@@ -3,7 +3,7 @@
 directory=".shrug"
 current_path=`pwd`
 
-
+# Check if directory exits
 if [ ! -d "$directory" ]; then
 
     echo "shrug-add: error: no .shrug directory containing shrug repository exists"
@@ -14,6 +14,7 @@ for file in "$@";
 do
 	if [ ! -f "$file" ]; then
 
+        # check if file is in repository
         if [ ! -f "$current_path/$directory/$file" ]; then
             echo "shrug-add: error: can not open '$file'"
             exit 1
@@ -31,7 +32,7 @@ new_path="$current_path/.shrug"
 index_dir="$new_path/$directory"
 del_flag=1
 
-# Checking if Index exitst
+# Checking if Index exists
 if [ ! -d "$index_dir" ]; then
     mkdir $index_dir
     del_flag=0

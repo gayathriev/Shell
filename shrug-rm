@@ -10,7 +10,6 @@ directory="index"
 current_path=`pwd`
 new_path="$current_path/.shrug"
 
-
 commit=0
 while true; do
     # Commit index folder
@@ -27,16 +26,12 @@ while true; do
     fi
     commit=$((commit + 1))
 done
-
 commit=$((commit -2))
 
 
-
+# Check if command run is force is cache
 if [ "$1" = "--force" ]; then
     force_flag=1
-    # if [ "$2" = "--cached"] then
-    #     cach_flag=1
-    # fi
 else 
     if [ "$1" = "--cached" ]; then
         cach_flag=1
@@ -47,37 +42,47 @@ directory_path=`pwd`
 repo_path="$directory_path/.shrug"
 index_path="$repo_path/index"
 
-# just rm case
+# Just rm case
 for file in "$@"; do
 
     ir=0
     rc=0
     ic=0
     if [ "$1" = "--force" ]; then
+        # Go to force section
         break
     fi
     if [ "$1" = "--cached" ]; then
+        # Go to cached section
         break
     fi 
 
+    # File not in repository and index
     if [ ! -f "$repo_path/$file"  ] && [ ! -f "$index_path/$file" ]; then
 
         echo "shrug-rm: error: '$file' is not in the shrug repository"
         exit 1
     fi
 
+    # If file exists in index
     if [ -f "$index_path/$file" ]; then
 
+        # Compare Index file and Repository file
         if cmp -s $index_path/$file $repo_path/$file; then
+            # Change Index and Repo flag
             ir=1
         fi
+        # Compare Index file and directory file
         if cmp -s $index_path/$file $directory_path/$file; then
+            # Change Index and Directory flag 
             ic=1
             
         fi 
     fi
 
+    # Compare Repository file and Directory file
     if cmp -s $repo_path/$file $directory_path/$file; then
+        # Change Repository and Directory flag
         rc=1
     fi 
 
@@ -103,13 +108,15 @@ for file in "$@"; do
         exit 1
     fi
 
+    # Remove file from Current Directory and Index
     rm $file
     rm "$index_path/$file"
 
 done
 
+# Runs when -force is run
 if [ "$force_flag" -eq 1 ]; then
-    # call index remove function
+  
     for file in "$@"; do
 
         if [ $file = "--force" ]; then 
@@ -121,6 +128,7 @@ if [ "$force_flag" -eq 1 ]; then
             continue
         fi
 
+        # CHeck if file is in Index
         if [ ! -f "$index_path/$file"  ]; then
 
             echo "shrug-rm: error: '$file' is not in the shrug repository"
@@ -140,6 +148,7 @@ if [ "$force_flag" -eq 1 ]; then
     exit 1
 fi
 
+# Check if cache is run
 if [ "$cach_flag" -eq 1 ]; then
 
     ir=0
@@ -156,23 +165,23 @@ if [ "$cach_flag" -eq 1 ]; then
             continue
         fi
 
+        # Check if file is not in index
         if [ ! -f "$index_path/$file"  ]; then
 
             echo "shrug-rm: error: '$file' is not in the shrug repository"
             exit 1
         fi 
 
+        # Compare Index file and Directory file
         if cmp -s $index_path/$file $directory_path/$file; then
-
-            # echo "shrug-rm: error: '$file' in index is different to both working file and repository"
-            # exit 1
+            # Change Directory and Repo flag
             rc=1
         fi
 
+        # Compare Index file and Repository file
         if cmp -s $index_path/$file $repo_path/$file; then
-            # echo "shrug-rm: error: '$file' in index is different to both working file and repository"
+            # Change Index and Repo flag
             ir=1
-            # exit 1
         fi
 
         if [ "$rc" -eq 0 ] && [ "$ir" -eq 0 ] && [ "$ic" -eq 0 ]; then
@@ -180,7 +189,7 @@ if [ "$cach_flag" -eq 1 ]; then
             echo "shrug-rm: error: '$file' in index is different to both working file and repository"
             exit 1
         fi 
-
+        # Remove file from Index
         rm $index_path/$file
         
     done

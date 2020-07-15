@@ -24,5 +24,7 @@ Date                Start                   Stop                Activity        
 
 13/07/2020          18.00                   22.00               Debugging                   0 passing, 8/10 subset 1 passing, tests for subset 0 done
 
+14/07/2020          18.00                   21.00               Coding                      Tests for subset 1, added comments
+
 
 give cs2041 ass1_shrug shrug-* diary.txt test??.sh [any-other-files]
